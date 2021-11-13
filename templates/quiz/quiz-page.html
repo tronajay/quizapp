@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+
+ <div class="container">
+    <h3 class="fw-bold mb-2">{{quiz.title}}</h3>
+    <form action="">{% csrf_token %}
+    <input type="text" hidden id="quiz" value="{{quiz.id}}">
+    {% for q in quiz.question_set.all %}
+        <div class="card p-3">
+            <label for="" class="fw-bold"> {{q.title}} </label>
+            <input class="quid" type="text" hidden value="{{q.id}}">
+            {% for an in q.answer_set.all %}
+                <div class="form-check">
+                    <input class="form-check-input opt" value="{{an.id}}" name="{{q.id}}" type="radio" id="ans{{an.id}}">
+                    <label class="form-check-label" for="ans{{an.id}}">
+                        {{an.title}}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    </form>
+     <button onclick="submitquiz()" class="btn btn-primary mb-3">Submit</button>
+ </div>
+
+ {% block script %}
+    <script>
+    $(".opt").off().on("click", function() {
+        console.log('Ans Save');
+        quiz = $('#quiz').val(), 
+        queid = $(this).parent().siblings('.quid').val();
+        selopt = $(this).val();
+        $.ajax({
+        type:'POST',
+        url:'/save-answer',
+        data:{
+            queid:queid,
+            option:selopt,
+            quiz:quiz,      
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+        },
+    });
+    });
+</script>
+<script>
+   function submitquiz(){
+        $.ajax({
+        type:'POST',
+        url:'/check-result',
+        data:{   
+            quiz:$('#quiz').val(),     
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+        },success: function (data){
+            alert("Your Total Marks are : "+data);
+        }     
+    });
+   }
+</script>
+ {% endblock script %}
+
+{% endblock content %}
+
