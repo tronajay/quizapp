@@ -7,7 +7,7 @@
     <input type="text" hidden id="quiz" value="{{quiz.id}}">
     {% for q in quiz.question_set.all %}
         <div class="card p-3">
-            <label for="" class="fw-bold"> {{q.title}} </label>
+            <label for="" class="fw-bold">{{forloop.counter}}. {{q.title}} </label>
             <input class="quid" type="text" hidden value="{{q.id}}">
             {% for an in q.answer_set.all %}
                 <div class="form-check">

@@ -3,14 +3,60 @@
     <div class="container">
        {% for q in quiz %}
             <div class="card mt-3 p-3">
-                <a href="/quiz/{{q.slug}}">
-                    <span class="fw-bold">
-                        {{forloop.counter}}. {{q.title}}
+                <a {% if q.marks %} id="quizurl" onclick="reattemptquiz()" href="#" data-url="/quiz/{{q.slug}}?reattempt=True" {% else %} href="/quiz/{{q.slug}}" {% endif %}>
+                    <span class="fw-bold">{{forloop.counter}}.</span>
+                    <span class="fw-bold" id="quiztitle">
+                        {{q.title}}
                     </span>
-                    <span class="float-end badge bg-success">Marks: {{q.marks}}</span>
+                    {% if q.marks %}
+                        <span class="float-end badge bg-success">Marks: {{q.marks}}</span>
+                    {% endif %}
                 </a>
             </div>
        {% endfor %}
+       <div class="modal-primary me-1 mb-1 d-inline-block">
+            <!--primary theme Modal -->
+            <div class="modal fade text-left" id="reattempt-modal" tabindex="-1" aria-labelledby="myModalLabel160" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <h5 class="modal-title white" id="myModalLabel160">
+                                Attempt Alert
+                            </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <i data-feather="x"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Do you really want to Reattempt <span class="fw-bold" id="quiz-title"></span> Quiz?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light-danger" data-bs-dismiss="modal">
+                                <i class="bx bx-x d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">No</span>
+                            </button>
+                            <a href="" id="reattempt-url" class="btn btn-primary ml-1">
+                                <i class="bx bx-check d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Reattempt</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    {% block script %}
+        <script>
+            $("#quizurl").off().on("click", function() {
+                title = $(this).children('#quiztitle').text();
+                $('#quiz-title').text(title);
+                url = $(this).attr('data-url');
+                $('#reattempt-url').attr('href',url)
+                $('#reattempt-modal').modal('show');
+            });
+        </script>
+    {% endblock script %}
+
+
 {% endblock content %}
 

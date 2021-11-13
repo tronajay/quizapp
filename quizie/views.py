@@ -10,14 +10,23 @@ def home(request):
         for q in quiz:
             if Result.objects.filter(Q(user__id=request.user.id) & Q(quiz__id=q.id)).exists():
                 res = Result.objects.get(Q(user__id=request.user.id) & Q(quiz__id=q.id))
-                print(q)
+                q.marks = res.marks
         return render(request,'quiz/quiz-list.html',{'quiz':quiz})
+    else:
+        return redirect('/login')
 
 def quiz(request,quiz):
     if request.user.is_authenticated:
-        quiz = Quiz.objects.get(slug=quiz)
-        params = {'quiz':quiz}
-        return render(request,'quiz/quiz-page.html',params)
+        if request.GET.get('reattempt')=='True':
+            SaveAns.objects.filter(Q(user__id=request.user.id) & Q(quiz__slug=quiz)).delete()
+            Result.objects.filter(Q(user__id=request.user.id) & Q(quiz__slug=quiz)).delete()
+            quiz = Quiz.objects.get(slug=quiz)
+            params = {'quiz':quiz}
+            return render(request,'quiz/quiz-page.html',params)
+        else:
+            quiz = Quiz.objects.get(slug=quiz)
+            params = {'quiz':quiz}
+            return render(request,'quiz/quiz-page.html',params)
     else:
         return redirect('login')
 
