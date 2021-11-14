@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %} QuizApp {% endblock title %} 
 {% block content %}
     <div class="container">
        {% for q in quiz %}
@@ -32,12 +33,12 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light-danger" data-bs-dismiss="modal">
-                                <i class="bx bx-x d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">No</span>
+                                <i class="bx bx-x"></i>
+                                <span class="">No</span>
                             </button>
                             <a href="" id="reattempt-url" class="btn btn-primary ml-1">
-                                <i class="bx bx-check d-block d-sm-none"></i>
-                                <span class="d-none d-sm-block">Reattempt</span>
+                                <i class="bx bx-check"></i>
+                                <span class="">Yes</span>
                             </a>
                         </div>
                     </div>
